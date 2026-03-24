@@ -1,0 +1,414 @@
+Q1. Write a PL/SQL program to Accept Number from a User and display Hello message if the entered number is Positive.
+DECLARE
+  v_num NUMBER := &enter_number;
+BEGIN
+  IF v_num > 0 THEN
+    DBMS_OUTPUT.PUT_LINE('Hello! The number ' || v_num || ' is Positive.');
+  ELSE
+    DBMS_OUTPUT.PUT_LINE('The number is not Positive.');
+  END IF;
+END;
+/
+
+Q2. Write a PL/SQL block to accept an employee's salary and determine the grade:   Salary >= 50000 -> Grade A | Salary >= 30000 -> Grade B | Salary < 30000 -> Grade C
+DECLARE
+  v_sal NUMBER := &enter_salary;
+  v_grade VARCHAR2(1);
+BEGIN
+  IF v_sal >= 50000 THEN
+    v_grade := 'A';
+  ELSIF v_sal >= 30000 THEN
+    v_grade := 'B';
+  ELSE
+    v_grade := 'C';
+  END IF;
+  DBMS_OUTPUT.PUT_LINE('Grade: ' || v_grade);
+END;
+/
+
+Q3. Write a PL/SQL program to Display Salary of a specified employee increasing by 500 if its salary is more than 3000.
+DECLARE
+  v_sal   employee.salary%TYPE;
+  v_empno employee.empno%TYPE := &enter_empno;
+BEGIN
+  SELECT salary INTO v_sal FROM employee WHERE empno = v_empno;
+  IF v_sal > 3000 THEN
+    v_sal := v_sal + 500;
+    DBMS_OUTPUT.PUT_LINE('Updated Salary: ' || v_sal);
+  ELSE
+    DBMS_OUTPUT.PUT_LINE('Salary not eligible for increment. Current Salary: ' || v_sal);
+  END IF;
+END;
+/
+
+Q4. Write a PL/SQL program using FOR loop to insert ten rows into a database table.
+BEGIN
+  FOR i IN 1..10 LOOP
+    INSERT INTO test_table(id, value) VALUES(i, 'Row ' || i);
+  END LOOP;
+  COMMIT;
+  DBMS_OUTPUT.PUT_LINE('10 rows inserted successfully.');
+END;
+/
+
+Q5. Write a PL/SQL program to generate Fibonacci series.
+DECLARE
+  a NUMBER := 0;
+  b NUMBER := 1;
+  c NUMBER;
+  n NUMBER := &enter_terms;
+BEGIN
+  DBMS_OUTPUT.PUT_LINE('Fibonacci Series:');
+  DBMS_OUTPUT.PUT_LINE(a);
+  DBMS_OUTPUT.PUT_LINE(b);
+  FOR i IN 3..n LOOP
+    c := a + b;
+    DBMS_OUTPUT.PUT_LINE(c);
+    a := b;
+    b := c;
+  END LOOP;
+END;
+/
+
+Q6. Write a PL/SQL program to get the name and salary of specified employee using %TYPE attribute.
+DECLARE
+  v_name   employee.name%TYPE;
+  v_sal    employee.salary%TYPE;
+  v_empno  employee.empno%TYPE := &enter_empno;
+BEGIN
+  SELECT name, salary INTO v_name, v_sal
+  FROM employee WHERE empno = v_empno;
+  DBMS_OUTPUT.PUT_LINE('Name   : ' || v_name);
+  DBMS_OUTPUT.PUT_LINE('Salary : ' || v_sal);
+END;
+/
+
+Q7. Write a PL/SQL Program to display a given number in Reverse Order.
+DECLARE
+  v_num    NUMBER := &enter_number;
+  v_rev    NUMBER := 0;
+  v_digit  NUMBER;
+  v_temp   NUMBER;
+BEGIN
+  v_temp := v_num;
+  WHILE v_temp > 0 LOOP
+    v_digit := MOD(v_temp, 10);
+    v_rev   := v_rev * 10 + v_digit;
+    v_temp  := TRUNC(v_temp / 10);
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE('Reverse of ' || v_num || ' is: ' || v_rev);
+END;
+/
+
+Q8. Write a PL/SQL program to take a department ID and display the department name using CASE.   10->Finance  20->HR  30->IT  40->Sales  Others->Invalid Department
+DECLARE
+  v_deptno NUMBER := &enter_deptno;
+  v_dname  VARCHAR2(30);
+BEGIN
+  v_dname := CASE v_deptno
+               WHEN 10 THEN 'Finance'
+               WHEN 20 THEN 'HR'
+               WHEN 30 THEN 'IT'
+               WHEN 40 THEN 'Sales'
+               ELSE 'Invalid Department'
+             END;
+  DBMS_OUTPUT.PUT_LINE('Department: ' || v_dname);
+END;
+/
+
+Q9. Write a PL/SQL program to get the name and salary of specified employee.
+DECLARE
+  v_name   VARCHAR2(50);
+  v_sal    NUMBER;
+  v_empno  NUMBER := &enter_empno;
+BEGIN
+  SELECT name, salary INTO v_name, v_sal
+  FROM employee WHERE empno = v_empno;
+  DBMS_OUTPUT.PUT_LINE('Employee Name   : ' || v_name);
+  DBMS_OUTPUT.PUT_LINE('Employee Salary : ' || v_sal);
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('No employee found with given ID.');
+END;
+/
+
+Q10. Write a PL/SQL block using a for loop to print the sum of the first 100 odd natural numbers.
+DECLARE
+  v_sum   NUMBER := 0;
+  v_count NUMBER := 0;
+  v_num   NUMBER := 1;
+BEGIN
+  WHILE v_count < 100 LOOP
+    v_sum   := v_sum + v_num;
+    v_count := v_count + 1;
+    v_num   := v_num + 2;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE('Sum of first 100 odd numbers: ' || v_sum);
+END;
+/
+
+Q11. Using procedure pass employee no and name and store into employee table.
+CREATE OR REPLACE PROCEDURE insert_employee(p_empno NUMBER, p_name VARCHAR2) IS
+BEGIN
+  INSERT INTO employee(empno, name) VALUES(p_empno, p_name);
+  COMMIT;
+  DBMS_OUTPUT.PUT_LINE('Employee inserted successfully.');
+END;
+/
+-- Calling the procedure:
+EXEC insert_employee(101, 'Rahul');
+
+Q12. Create a Procedure which receives employee number and displays employee name, Designation and salary.
+CREATE OR REPLACE PROCEDURE get_emp_details(p_empno NUMBER) IS
+  v_name   VARCHAR2(50);
+  v_desg   VARCHAR2(50);
+  v_sal    NUMBER;
+BEGIN
+  SELECT name, designation, salary INTO v_name, v_desg, v_sal
+  FROM employee WHERE empno = p_empno;
+  DBMS_OUTPUT.PUT_LINE('Name        : ' || v_name);
+  DBMS_OUTPUT.PUT_LINE('Designation : ' || v_desg);
+  DBMS_OUTPUT.PUT_LINE('Salary      : ' || v_sal);
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('Employee not found.');
+END;
+/
+-- Calling:
+EXEC get_emp_details(101);
+
+Q13. Write a PL/SQL block which will use a user-defined procedure that accepts employee number and returns employee name and department name as OUT parameters.
+CREATE OR REPLACE PROCEDURE get_emp_dept(
+  p_empno   IN  NUMBER,
+  p_name    OUT VARCHAR2,
+  p_deptname OUT VARCHAR2
+) IS
+BEGIN
+  SELECT e.name, d.dname
+  INTO p_name, p_deptname
+  FROM employee e JOIN department d ON e.deptno = d.deptno
+  WHERE e.empno = p_empno;
+END;
+/
+
+-- Calling block:
+DECLARE
+  v_name VARCHAR2(50);
+  v_dept VARCHAR2(50);
+BEGIN
+  get_emp_dept(101, v_name, v_dept);
+  DBMS_OUTPUT.PUT_LINE('Name: ' || v_name || '  Dept: ' || v_dept);
+END;
+/
+
+Q14. Create a procedure which will accept Deptno and Display no of employees under different grade.
+CREATE OR REPLACE PROCEDURE emp_grade_count(p_deptno NUMBER) IS
+  v_a NUMBER := 0;
+  v_b NUMBER := 0;
+  v_c NUMBER := 0;
+BEGIN
+  SELECT COUNT(*) INTO v_a FROM employee
+  WHERE deptno = p_deptno AND salary >= 50000;
+  SELECT COUNT(*) INTO v_b FROM employee
+  WHERE deptno = p_deptno AND salary >= 30000 AND salary < 50000;
+  SELECT COUNT(*) INTO v_c FROM employee
+  WHERE deptno = p_deptno AND salary < 30000;
+  DBMS_OUTPUT.PUT_LINE('Grade A: ' || v_a);
+  DBMS_OUTPUT.PUT_LINE('Grade B: ' || v_b);
+  DBMS_OUTPUT.PUT_LINE('Grade C: ' || v_c);
+END;
+/
+EXEC emp_grade_count(10);
+
+Q15. Write a function total_salary_dept that returns the total salary of all employees in a given department.
+CREATE OR REPLACE FUNCTION total_salary_dept(p_deptno NUMBER)
+RETURN NUMBER IS
+  v_total NUMBER;
+BEGIN
+  SELECT SUM(salary) INTO v_total
+  FROM employee WHERE deptno = p_deptno;
+  RETURN NVL(v_total, 0);
+END;
+/
+
+-- Calling:
+BEGIN
+  DBMS_OUTPUT.PUT_LINE('Total Salary: ' || total_salary_dept(10));
+END;
+/
+
+Q16. Create a function count_emp_dept that accepts a department ID and returns the number of employees in that department.
+CREATE OR REPLACE FUNCTION count_emp_dept(p_deptno NUMBER)
+RETURN NUMBER IS
+  v_count NUMBER;
+BEGIN
+  SELECT COUNT(*) INTO v_count
+  FROM employee WHERE deptno = p_deptno;
+  RETURN v_count;
+END;
+/
+
+-- Calling:
+BEGIN
+  DBMS_OUTPUT.PUT_LINE('Employee Count: ' || count_emp_dept(10));
+END;
+/
+
+Q17. Write a function calc_bonus that returns the bonus for an employee as 20% of salary.
+CREATE OR REPLACE FUNCTION calc_bonus(p_empno NUMBER)
+RETURN NUMBER IS
+  v_sal NUMBER;
+BEGIN
+  SELECT salary INTO v_sal FROM employee WHERE empno = p_empno;
+  RETURN v_sal * 0.20;
+END;
+/
+
+-- Calling:
+BEGIN
+  DBMS_OUTPUT.PUT_LINE('Bonus: ' || calc_bonus(101));
+END;
+/
+
+Q18. Write a procedure show_emp that accepts an employee ID and prints: Name, Salary & DeptName.
+CREATE OR REPLACE PROCEDURE show_emp(p_empno NUMBER) IS
+  v_name   VARCHAR2(50);
+  v_sal    NUMBER;
+  v_dname  VARCHAR2(50);
+BEGIN
+  SELECT e.name, e.salary, d.dname
+  INTO v_name, v_sal, v_dname
+  FROM employee e JOIN department d ON e.deptno = d.deptno
+  WHERE e.empno = p_empno;
+  DBMS_OUTPUT.PUT_LINE('Name     : ' || v_name);
+  DBMS_OUTPUT.PUT_LINE('Salary   : ' || v_sal);
+  DBMS_OUTPUT.PUT_LINE('Dept     : ' || v_dname);
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('No employee found.');
+END;
+/
+EXEC show_emp(101);
+
+Q19. Create a procedure update_salary that increases the salary of a given employee by a given percentage. Parameters: employee ID, percentage.
+CREATE OR REPLACE PROCEDURE update_salary(p_empno NUMBER, p_pct NUMBER) IS
+BEGIN
+  UPDATE employee
+  SET salary = salary + (salary * p_pct / 100)
+  WHERE empno = p_empno;
+  COMMIT;
+  DBMS_OUTPUT.PUT_LINE('Salary updated successfully.');
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('Employee not found.');
+END;
+/
+-- Increase salary by 10%:
+EXEC update_salary(101, 10);
+
+Q20. Write a function calculate_age(p_emp_id NUMBER) that retrieves the employee's DOB, calculates age in years, and returns the age.
+CREATE OR REPLACE FUNCTION calculate_age(p_emp_id NUMBER)
+RETURN NUMBER IS
+  v_dob  DATE;
+  v_age  NUMBER;
+BEGIN
+  SELECT dob INTO v_dob FROM employee WHERE empno = p_emp_id;
+  v_age := TRUNC(MONTHS_BETWEEN(SYSDATE, v_dob) / 12);
+  RETURN v_age;
+END;
+/
+
+-- Calling:
+BEGIN
+  DBMS_OUTPUT.PUT_LINE('Age: ' || calculate_age(101) || ' years');
+END;
+/
+
+Assignment IV: Cursor
+Q21. Write a PL/SQL block that will display the employee details along with salary using Cursors.
+DECLARE
+  CURSOR emp_cur IS
+    SELECT empno, name, salary FROM employee;
+  v_empno  employee.empno%TYPE;
+  v_name   employee.name%TYPE;
+  v_sal    employee.salary%TYPE;
+BEGIN
+  OPEN emp_cur;
+  LOOP
+    FETCH emp_cur INTO v_empno, v_name, v_sal;
+    EXIT WHEN emp_cur%NOTFOUND;
+    DBMS_OUTPUT.PUT_LINE(v_empno || '  ' || v_name || '  ' || v_sal);
+  END LOOP;
+  CLOSE emp_cur;
+END;
+/
+
+Q22. Write a Cursor to display the list of employees who are working as a Manager or Analyst.
+DECLARE
+  CURSOR cur_ma IS
+    SELECT empno, name, designation FROM employee
+    WHERE designation IN ('Manager', 'Analyst');
+  v_rec cur_ma%ROWTYPE;
+BEGIN
+  OPEN cur_ma;
+  LOOP
+    FETCH cur_ma INTO v_rec;
+    EXIT WHEN cur_ma%NOTFOUND;
+    DBMS_OUTPUT.PUT_LINE(v_rec.empno || '  ' || v_rec.name || '  ' || v_rec.designation);
+  END LOOP;
+  CLOSE cur_ma;
+END;
+/
+
+Q23. Using a cursor FOR loop, increase the salary of employees in the SALES department by 10%. Also display the old salary and new salary.
+DECLARE
+  CURSOR sales_cur IS
+    SELECT empno, name, salary FROM employee
+    WHERE deptno = (SELECT deptno FROM department WHERE dname = 'SALES')
+    FOR UPDATE OF salary;
+  v_new_sal NUMBER;
+BEGIN
+  FOR rec IN sales_cur LOOP
+    v_new_sal := rec.salary * 1.10;
+    DBMS_OUTPUT.PUT_LINE('Emp: ' || rec.name ||
+      '  Old: ' || rec.salary || '  New: ' || v_new_sal);
+    UPDATE employee SET salary = v_new_sal
+    WHERE CURRENT OF sales_cur;
+  END LOOP;
+  COMMIT;
+END;
+/
+
+Q24. Write a PL/SQL block using implicit cursor that will display message - salaries of all employees in the employee table are updated. If none of the employee's salary are updated, display 'None of the salaries were updated'. Else display 'Salaries for <n> employees are updated'.
+BEGIN
+  UPDATE employee SET salary = salary * 1.05;
+  IF SQL%ROWCOUNT = 0 THEN
+    DBMS_OUTPUT.PUT_LINE('None of the salaries were updated.');
+  ELSE
+    DBMS_OUTPUT.PUT_LINE('Salaries for ' || SQL%ROWCOUNT || ' employees are updated.');
+  END IF;
+  COMMIT;
+END;
+/
+
+Q25. Given the Table Employee (EmpNo, Name, Salary, Designation, Dept_ID). Write a cursor to select the five highest paid employees from the table.
+DECLARE
+  CURSOR top5_cur IS
+    SELECT empno, name, salary, designation, deptno
+    FROM employee
+    ORDER BY salary DESC
+    FETCH FIRST 5 ROWS ONLY;
+  v_rec top5_cur%ROWTYPE;
+BEGIN
+  DBMS_OUTPUT.PUT_LINE('Top 5 Highest Paid Employees:');
+  DBMS_OUTPUT.PUT_LINE('--------------------------------------');
+  OPEN top5_cur;
+  LOOP
+    FETCH top5_cur INTO v_rec;
+    EXIT WHEN top5_cur%NOTFOUND;
+    DBMS_OUTPUT.PUT_LINE(v_rec.name || '  Salary: ' || v_rec.salary);
+  END LOOP;
+  CLOSE top5_cur;
+END;
+/
+
