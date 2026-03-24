@@ -155,7 +155,6 @@ BEGIN
   DBMS_OUTPUT.PUT_LINE('Employee inserted successfully.');
 END;
 /
--- Calling the procedure:
 EXEC insert_employee(101, 'Rahul');
 
 Q12. Create a Procedure which receives employee number and displays employee name, Designation and salary.
@@ -174,7 +173,6 @@ EXCEPTION
     DBMS_OUTPUT.PUT_LINE('Employee not found.');
 END;
 /
--- Calling:
 EXEC get_emp_details(101);
 
 Q13. Write a PL/SQL block which will use a user-defined procedure that accepts employee number and returns employee name and department name as OUT parameters.
@@ -191,7 +189,6 @@ BEGIN
 END;
 /
 
--- Calling block:
 DECLARE
   v_name VARCHAR2(50);
   v_dept VARCHAR2(50);
@@ -231,7 +228,6 @@ BEGIN
 END;
 /
 
--- Calling:
 BEGIN
   DBMS_OUTPUT.PUT_LINE('Total Salary: ' || total_salary_dept(10));
 END;
@@ -248,7 +244,6 @@ BEGIN
 END;
 /
 
--- Calling:
 BEGIN
   DBMS_OUTPUT.PUT_LINE('Employee Count: ' || count_emp_dept(10));
 END;
@@ -264,7 +259,6 @@ BEGIN
 END;
 /
 
--- Calling:
 BEGIN
   DBMS_OUTPUT.PUT_LINE('Bonus: ' || calc_bonus(101));
 END;
@@ -303,7 +297,6 @@ EXCEPTION
     DBMS_OUTPUT.PUT_LINE('Employee not found.');
 END;
 /
--- Increase salary by 10%:
 EXEC update_salary(101, 10);
 
 Q20. Write a function calculate_age(p_emp_id NUMBER) that retrieves the employee's DOB, calculates age in years, and returns the age.
@@ -318,12 +311,11 @@ BEGIN
 END;
 /
 
--- Calling:
+
 BEGIN
   DBMS_OUTPUT.PUT_LINE('Age: ' || calculate_age(101) || ' years');
 END;
 /
-
 Assignment IV: Cursor
 Q21. Write a PL/SQL block that will display the employee details along with salary using Cursors.
 DECLARE
